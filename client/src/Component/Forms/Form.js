@@ -1,45 +1,54 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, TextField, Typography, Paper } from "@mui/material"
 import "./formStyle.css"
 import Filebase from "react-file-base64"
-import {useDispatch} from "react-redux"
-import { createPost } from '../../Actions/actions'
+import {useDispatch,useSelector} from "react-redux"
+import { createPost,updatedPost } from '../../Actions/postActions'
 
-function Form() {
-
+function Form({currentId,setCurrentId}) {
+  const post = useSelector((state)=> currentId ? state.posts.find((p)=>p._id === currentId ) : null)
   const [postData,setpostData] = useState({
-    creator:'',
     title:'',
     message:'',
     tags:'',
     selectedFile:''
   })
+  const user = JSON.parse(localStorage.getItem('profile'));
   const dispatch = useDispatch()
+  useEffect(()=>{
+   if(post) setpostData(post);
 
+  },[post])
 
   const handleSubmit = (e)=>{
     e.preventDefault();
-    dispatch(createPost(postData))
 
+    if(currentId){
+      if(user){
+        dispatch(updatedPost({currentId,...postData,name:user.result.name}));
+      }
+    }else{
+      if(user){
+        dispatch(createPost({...postData, name:user.result.name}));
+      }
+    }
+    clear();
+   
   }
 
   const clear = ()=>{
-    
+    setCurrentId(null);
+    setpostData({
+      title:'',
+      message:'',
+      tags:'',
+      selectedFile:''
+    })
   }
   return (
     <Paper className="paper">
       <form className="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <Typography variant="h6">Creating a Memory</Typography>
-        <TextField 
-        variant="outlined"
-        name="Creator" 
-        label="Creator" 
-        fullWidth 
-        value={postData.creator}
-        onChange={(e)=>{
-          setpostData({...postData,creator:e.target.value})
-        }}
-         />
+        <Typography variant="h6"> {currentId ? 'Edit' : 'Creat' } a Memory </Typography>
          
           <TextField 
         variant="outlined"
@@ -66,9 +75,9 @@ function Form() {
         name="tag" 
         label="Tag" 
         fullWidth 
-        value={postData.tag}
+        value={postData.tags}
         onChange={(e)=>{
-          setpostData({...postData,tag:e.target.value})
+          setpostData({...postData,tags:e.target.value.split(',')})
         }}
          />
          <div>
