@@ -5,10 +5,12 @@ import express from "express";
 import dotenv from "dotenv";
 import postRouter from "./Routes/posts.js"
 import userRouter from "./Routes/user.js"
+import path from "path"
 dotenv.config();
 
 
 const app = express();
+
 
 app.use(bodyparser.json({limit:"30mb",extended:"true"}))
 app.use(bodyparser.urlencoded({limit:"30mb",extended:"true"}))
