@@ -24,7 +24,13 @@ function Home() {
             <Posts setCurrentId={setCurrentId} />
           </Grid>
           <Grid xs={12} sm={4}>
+
+
              <Form currentId={currentId} setCurrentId={setCurrentId} />
+
+
+
+
           </Grid>
         </Grid>
       </Container>
