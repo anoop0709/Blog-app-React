@@ -15,9 +15,10 @@ export const getPost = async (req, res) => {
 
 export const createPost = async (req, res) => {
     console.log(req.body);
-    const { post } = req.body;
-    const newPost = await Posts.create({...post, creator:req.userId,createdAt: new Date().toISOString()});
-    console.log(newPost);
+    console.log("helloooo");
+    const {title,message,tags,selectedFile,name } = req.body;
+    const newPost = await Posts.create({title,message,name,creator:req.userId,tags,selectedFile,createdAt: new Date().toISOString()});
+    console.log(newPost+23423523452345);
     try {
         res.status(201).json({ newPost });
     } catch (error) {
@@ -26,11 +27,12 @@ export const createPost = async (req, res) => {
 }
 
 export const updatePost = async (req, res) => {
-    const { id: _id } = req.params;
+    const  id  = req.params.id;
     const post = req.body;
-    if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with this id');
+    console.log(id,req.body);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No post with this id');
     try {
-        const updatedPost = await Posts.findByIdAndUpdate(_id, { ...post, _id }, { new: true });
+        const updatedPost = await Posts.findByIdAndUpdate(id, { ...post, id }, { new: true });
         res.json(updatedPost);
     } catch (error) {
         console.log(error);
@@ -60,7 +62,7 @@ export const likePost = async (req, res) => {
         if(index === -1){
             post.likes.push(req.userId);
         }else{
-            post.likes.filter((id)=> id !== String(req.userId));
+           post.likes =  post.likes.filter((id)=> id !== String(req.userId));
         }
         const updatelike = await Posts.findByIdAndUpdate(id,post, { new: true })
         res.json(updatelike);

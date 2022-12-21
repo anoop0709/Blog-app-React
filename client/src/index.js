@@ -7,7 +7,14 @@ import thunk from "redux-thunk"
 import reducers from "./Reducer"
 import "./index.css"
 
-const store = createStore(reducers,compose(applyMiddleware(thunk)))
+const user = localStorage.getItem("profile") ? JSON.parse(localStorage.getItem("profile")) : null;
+
+const initialState = {
+    AuthReducer: {authData: user}
+}
+
+
+const store = createStore(reducers,initialState, compose(applyMiddleware(thunk)))
 
 reactDom.render(
 <Provider store={store} >

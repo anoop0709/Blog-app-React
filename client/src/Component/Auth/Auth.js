@@ -34,6 +34,7 @@ function Auth() {
    const handleSubmit = (e)=>{
        e.preventDefault();
        console.log(formData);
+       console.log("submit from signup");
        if(isSignUp){
            dispatch(signUp(formData,Navigate))
 
@@ -87,7 +88,7 @@ function Auth() {
                  }
                   <Input name="email" label="Email" handleChange={handleChange} type="email" />
                   <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword}/>
-                  {isSignUp && <Input name="confirmpassword" label="Repeat password" handleChange={handleChange}/>}
+                  {isSignUp && <Input name="confirmpassword" label="Repeat password" handleChange={handleChange} type="password"/>}
              </Grid>
              <Button fullWidth type="submit" variant="contained" color="primary" className="submit">
              {isSignUp ? "Sign Up": "Sign In"}

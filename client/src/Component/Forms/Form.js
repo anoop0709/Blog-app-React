@@ -6,32 +6,37 @@ import {useDispatch,useSelector} from "react-redux"
 import { createPost,updatedPost } from '../../Actions/postActions'
 
 function Form({currentId,setCurrentId}) {
+  console.log(currentId);
   const post = useSelector((state)=> currentId ? state.posts.find((p)=>p._id === currentId ) : null)
+ console.log(post);
   const [postData,setpostData] = useState({
     title:'',
     message:'',
     tags:'',
     selectedFile:''
   })
-  const user = JSON.parse(localStorage.getItem('profile'));
+  const user = useSelector((state)=>state.AuthReducer.authData);
+  console.log(user);
   const dispatch = useDispatch()
   useEffect(()=>{
    if(post) setpostData(post);
 
-  },[post])
+   
+  },[post,user])
 
   const handleSubmit = (e)=>{
     e.preventDefault();
-
+    
     if(currentId){
-      if(user){
-        dispatch(updatedPost({currentId,...postData,name:user.result.name}));
-      }
+      console.log(currentId);
+        dispatch(updatedPost(currentId,{...postData,name:user.result.name}));
+      
     }else{
-      if(user){
+     
         dispatch(createPost({...postData, name:user.result.name}));
-      }
+      
     }
+
     clear();
    
   }
@@ -45,7 +50,15 @@ function Form({currentId,setCurrentId}) {
       selectedFile:''
     })
   }
-  return (
+
+  
+   
+    
+    
+ 
+
+  
+  return user ? (
     <Paper className="paper">
       <form className="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
         <Typography variant="h6"> {currentId ? 'Edit' : 'Creat' } a Memory </Typography>
@@ -111,7 +124,15 @@ function Form({currentId,setCurrentId}) {
          </Button>
       </form>
     </Paper>
+  ) : (
+    <Paper className="paper">
+    <Typography variant="h6" align="center">
+      Please sign in to create a Memory !!!!!
+    </Typography>
+
+  </Paper>
   )
 }
+
 
 export default Form
