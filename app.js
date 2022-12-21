@@ -9,6 +9,15 @@ dotenv.config();
 
 
 const app = express();
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
+});
 
 app.use(bodyparser.json({limit:"30mb",extended:"true"}))
 app.use(bodyparser.urlencoded({limit:"30mb",extended:"true"}))
